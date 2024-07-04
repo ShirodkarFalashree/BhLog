@@ -59,6 +59,65 @@ export class Service{
             return false
         }
     }
+
+    async getPost(slug){
+        try {
+            await this.databases.getDocument(
+                conf.appwriteDatabaseId,conf.appwriteCollectionId,conf.slug
+            )
+        } catch (error) {
+            console.log("error in getting a  single post (getPost)",error);
+        }
+    }
+
+    async getPosts(queries =[Query.equal("statue","active")]){
+        try {
+            return await this.databases.listDocuments(
+                conf.appwriteDatabaseId,
+                conf.appwriteCollectionId,
+                queries,
+              
+            )
+        } catch (error) {
+            console.log("error in getPosts ",error);
+            return false
+        }
+    }
+
+    // file uploading services
+
+    async uploadFile(file){
+        try {
+            return await this.bucket.createFile(
+                conf.appwriteBucketId,
+                ID.unique(),
+                file
+            )
+        } catch (error) {
+            console.log("error in uploading file ",error);
+            return false;
+        }
+    }
+
+    async deleteFile(fileId){
+        try {
+            await this.bucket.deleteFile(
+                conf.appwriteBucketId,
+                fileId
+            )
+            return true;
+        } catch (error) {
+            console.log("error while deleting the file ",error);
+            return false;
+        }
+    }
+
+    getFilePreview(fileId){
+        return this.bucket,this.getFilePreview(
+            conf.appwriteBucketId,
+            fileId
+        )
+    }
 }
 
 
