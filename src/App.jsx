@@ -27,7 +27,7 @@ function App() {
 <div className='w-1/2 block text-center'>
         <Header />
         <main>
-          TODO:  <Outlet />
+          TODO:   <Outlet />
         </main>
         <Footer />
       </div>
