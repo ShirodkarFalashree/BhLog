@@ -6,6 +6,7 @@ import { login, logout } from './store/authSlice'
 import { Footer, Header } from './components';
 import { Outlet } from 'react-router-dom';
 import PostCard from './components/PostCard';
+import Button from './components/Button';
 
 function App() {
   const [loading, setLoading] = useState(true);
