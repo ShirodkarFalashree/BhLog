@@ -4,7 +4,7 @@ import App from './App.jsx'
 import './index.css'
 import { Provider } from 'react-redux'
 import store from './store/store.js'
-import { BrowserRouter, createBrowserRouter, RouterProvider } from 'react-router-dom';
+import {createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from './pages/Home.jsx'
 import { AuthLayout, Login } from './components/index.js'
 import AllPosts from './pages/AllPosts.jsx'
@@ -12,6 +12,7 @@ import EditPost from './pages/EditPost.jsx'
 import SignUp from './pages/SignUp.jsx'
 import AddPost from "./pages/AddPost";
 import Post from './pages/Post.jsx'
+import Profile from './pages/Profile.jsx'
 
 const router = createBrowserRouter([
   {
@@ -19,9 +20,14 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path:'/',
-        element:<Home/>
-      },
+        path: "/",
+        element: <Home />,
+    },
+      {
+        path: "/profile",
+        element: <Profile />,
+    },
+     
       {
         path:"/login",
         element:(
