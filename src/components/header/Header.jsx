@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Container, Logo, LogoutBtn } from '../index'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 function Header() {
   const authStatus = useSelector((state) => state.auth.status)
   const navigate = useNavigate()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const navItems = [
     {
@@ -36,6 +37,10 @@ function Header() {
     },
   ]
 
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen)
+  }
+
   return (
     <header className='py-3 shadow bg-slate-300 backdrop-blur-md text-normalText'>
       <Container>
@@ -47,7 +52,7 @@ function Header() {
           </div>
           <div className='flex lg:hidden'>
             {/* Mobile menu button */}
-            <button id="mobile-menu-button" className='text-normalText hover:text-heading'>
+            <button onClick={toggleMobileMenu} className='text-normalText hover:text-heading'>
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
               </svg>
@@ -71,7 +76,7 @@ function Header() {
             )}
           </ul>
           {/* Mobile menu */}
-          <div id="mobile-menu" className="hidden flex-col lg:hidden mt-2 space-y-2">
+          <div className={`lg:hidden ${isMobileMenuOpen ? 'flex' : 'hidden'} flex-col mt-2 space-y-2`}>
             {navItems.map((item) =>
               item.active ? (
                 <button
