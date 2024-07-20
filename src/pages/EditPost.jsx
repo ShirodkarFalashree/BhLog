@@ -5,18 +5,23 @@ import appwriteService from "../appwrite/config";
 import { Input, Button, RTE, Select } from '../components';
 
 function EditPost() {
-    const { id } = useParams();
+    const { id } = useParams(); // Assuming `id` is the slug
     const { register, handleSubmit, setValue, control } = useForm();
     const navigate = useNavigate();
     const [post, setPost] = useState(null);
 
     useEffect(() => {
+        // Fetch post data
         appwriteService.getPost(id).then((response) => {
-            setPost(response);
-            setValue('title', response.title);
-            setValue('slug', response.$id);
-            setValue('content', response.content);
-            setValue('status', response.status);
+            if (response) {
+                setPost(response);
+                setValue('title', response.title);
+                setValue('slug', response.$id); // Set slug as ID
+                setValue('content', response.content);
+                setValue('status', response.statue); // Adjust field name if needed
+            }
+        }).catch((error) => {
+            console.error("Error fetching post:", error);
         });
     }, [id, setValue]);
 
@@ -24,13 +29,15 @@ function EditPost() {
         try {
             const file = data.image[0] ? await appwriteService.uploadFile(data.image[0]) : null;
 
-            if (file) {
+            if (file && post.featuredImage) {
                 await appwriteService.deleteFile(post.featuredImage);
             }
 
             const updatedPost = await appwriteService.updatePost(id, {
-                ...data,
+                title: data.title,
+                content: data.content,
                 featuredImage: file ? file.$id : post.featuredImage,
+                statue: data.statue, // Ensure field name is correct
             });
 
             if (updatedPost) {

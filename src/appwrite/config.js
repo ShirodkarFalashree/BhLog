@@ -19,7 +19,7 @@ export class Service {
             const response = await this.databases.createDocument(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
-                slug,
+                slug, // Assuming slug is used as the document ID
                 {
                     title,
                     content,
@@ -35,12 +35,12 @@ export class Service {
         }
     }
 
-    async updatePost(slug, { title, content, featuredImage, statue }) {
+    async updatePost(documentId, { title, content, featuredImage, statue }) {
         try {
             const response = await this.databases.updateDocument(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
-                slug,
+                documentId, // Use documentId here
                 {
                     title,
                     content,
@@ -55,12 +55,12 @@ export class Service {
         }
     }
 
-    async deletePost(slug) {
+    async deletePost(documentId) {
         try {
             await this.databases.deleteDocument(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
-                slug
+                documentId // Use documentId here
             );
             console.log("Document deleted successfully");
             return true;
@@ -70,12 +70,12 @@ export class Service {
         }
     }
 
-    async getPost(slug) {
+    async getPost(documentId) {
         try {
             const response = await this.databases.getDocument(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
-                slug
+                documentId // Use documentId here
             );
             console.log("Document retrieved successfully:", response);
             return response;
@@ -100,7 +100,7 @@ export class Service {
         }
     }
 
-    // file upload service
+    // File upload service
 
     async uploadFile(file) {
         try {

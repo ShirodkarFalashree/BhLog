@@ -21,30 +21,41 @@ export default function PostForm({ post }) {
     const submit = async (data) => {
         try {
             if (post) {
+                // Update existing post
                 const file = data.image[0] ? await appwriteService.uploadFile(data.image[0]) : null;
 
                 if (file) {
-                    await appwriteService.deleteFile(post.featuredImage);
+                    // Delete the old file if a new file is uploaded
+                    if (post.featuredImage) {
+                        await appwriteService.deleteFile(post.featuredImage);
+                    }
                 }
 
                 const dbPost = await appwriteService.updatePost(post.$id, {
-                    ...data,
+                    title: data.title,
+                    content: data.content,
                     featuredImage: file ? file.$id : post.featuredImage,
+                    statue: data.status,
                 });
 
                 if (dbPost) {
                     navigate(`/post/${dbPost.$id}`);
                 }
             } else {
-                const file = await appwriteService.uploadFile(data.image[0]);
+                // Create a new post
+                const file = data.image[0] ? await appwriteService.uploadFile(data.image[0]) : null;
 
-                if (file) {
-                    data.featuredImage = file.$id;
-                    const dbPost = await appwriteService.createPost({ ...data, userId: userData.$id });
+                const dbPost = await appwriteService.createPost({
+                    title: data.title,
+                    slug: data.slug,
+                    content: data.content,
+                    featuredImage: file ? file.$id : null,
+                    statue: data.status,
+                    userId: userData.$id,
+                });
 
-                    if (dbPost) {
-                        navigate(`/post/${dbPost.$id}`);
-                    }
+                if (dbPost) {
+                    navigate(`/post/${dbPost.$id}`);
                 }
             }
         } catch (error) {
@@ -60,7 +71,6 @@ export default function PostForm({ post }) {
                 .replace(/[^a-zA-Z\d\s]+/g, "-")
                 .replace(/\s/g, "-");
         }
-
         return "";
     }, []);
 
@@ -100,7 +110,7 @@ export default function PostForm({ post }) {
                     type="file"
                     className="mb-4"
                     accept="image/png, image/jpg, image/jpeg, image/gif"
-                    {...register("image", { required: !post })}
+                    {...register("image")}
                 />
                 {post && post.featuredImage && (
                     <div className="w-full mb-4">
